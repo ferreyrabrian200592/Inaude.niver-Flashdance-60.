@@ -176,6 +176,12 @@ describe('Netlify deployment', () => {
 });
 
 describe('private album moderation', () => {
+  it('uses the authenticated bearer token for protected album requests', async () => {
+    const script = await readProjectFile('src/admin.js');
+
+    expect(script).toContain("Authorization: `Bearer ${accessToken}`");
+  });
+
   it('requires an authenticated session to list and delete files', async () => {
     const script = await readProjectFile('src/admin.js');
     const policies = await readProjectFile('supabase/admin.sql');
