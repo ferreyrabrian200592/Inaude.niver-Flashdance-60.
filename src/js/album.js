@@ -20,7 +20,7 @@ export const isAlbumConfigured = Boolean(supabaseUrl && supabaseKey);
 
 const headers = {
   apikey: supabaseKey ?? '',
-  Authorization: `Bearer ${supabaseKey ?? ''}`
+  Authorization: 'Bearer ' + (supabaseKey ?? '')
 };
 
 const responseError = async (response) => {
@@ -140,7 +140,7 @@ export const uploadAlbumFile = (file, author, onProgress) => {
     const request = new XMLHttpRequest();
     request.open('POST', endpoint);
     request.setRequestHeader('apikey', supabaseKey);
-    request.setRequestHeader('Authorization', `Bearer ${supabaseKey}`);
+    request.setRequestHeader('Authorization', 'Bearer ' + supabaseKey);
     request.setRequestHeader('Content-Type', file.type);
     request.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
