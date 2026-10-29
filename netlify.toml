@@ -4,4 +4,4 @@
 
 [build.environment]
   VITE_SUPABASE_URL = "https://otqhrpbxhxkrhrnjqbba.supabase.co"
-  VITE_SUPABASE_ANON_KEY = "sb_publishable_jHTwD4aqTJOCm2PbY4FITw_0oWNENt8"
+  VITE_SUPABASE_ANON_KEY = ""
