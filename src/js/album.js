@@ -16,7 +16,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024;
 export const MAX_FILES = 10;
-export const isAlbumConfigured = Boolean(supabaseUrl && supabaseKey);
+export const isAlbumConfigured = Boolean(supabaseUrl && supabaseKey) && !supabaseUrl.includes('kgqztbsasotuhkhlgwqu');
 
 const headers = {
   apikey: supabaseKey ?? '',
