@@ -5,3 +5,18 @@
 [build.environment]
   VITE_SUPABASE_URL = "https://otqhrpbxhxkrhrnjqbba.supabase.co"
   VITE_SUPABASE_ANON_KEY = ""
+
+[[redirects]]
+  from = "/upload"
+  to = "/upload.html"
+  status = 200
+
+[[redirects]]
+  from = "/galeria"
+  to = "/galeria.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200

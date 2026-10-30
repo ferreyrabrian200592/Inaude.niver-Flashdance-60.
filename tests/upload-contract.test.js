@@ -157,6 +157,23 @@ describe('Netlify deployment', () => {
     expect(config).toMatch(/VITE_SUPABASE_ANON_KEY\s*=/);
   });
 
+  it('keeps mobile-friendly short routes available on Netlify', async () => {
+    const config = await readProjectFile('netlify.toml');
+
+    expect(config).toContain('from = "/upload"');
+    expect(config).toContain('to = "/upload.html"');
+    expect(config).toContain('from = "/galeria"');
+    expect(config).toContain('to = "/galeria.html"');
+    expect(config).toContain('from = "/admin"');
+    expect(config).toContain('to = "/admin.html"');
+  });
+
+  it('deploys the QR from the public assets directory', async () => {
+    const qr = await readProjectFile('public/qr-inaude-60.png');
+
+    expect(qr.length).toBeGreaterThan(0);
+  });
+
   it('builds a separate private moderation page without exposing an admin link publicly', async () => {
     const config = await readProjectFile('vite.config.js');
     const admin = await readProjectFile('admin.html');

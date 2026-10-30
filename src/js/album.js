@@ -12,11 +12,16 @@ const allowedTypes = new Map([
 ]);
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/+$/, '');
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024;
 export const MAX_FILES = 10;
-export const isAlbumConfigured = Boolean(supabaseUrl && supabaseKey);
+const keyLooksConfigured =
+  Boolean(supabaseKey) &&
+  !['your_supabase_publishable_or_anon_key', 'your_supabase_key', 'replace-me'].includes(
+    supabaseKey?.toLowerCase() ?? ''
+  );
+export const isAlbumConfigured = Boolean(supabaseUrl && keyLooksConfigured);
 
 const headers = {
   apikey: supabaseKey ?? '',
