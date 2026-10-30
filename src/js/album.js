@@ -65,6 +65,18 @@ const getTypeFromName = (name) => {
   return type ?? '';
 };
 
+const extensionTypeMap = new Map(
+  [...allowedTypes].map(([type, extension]) => [extension, type])
+);
+
+const resolveFileType = (file) => {
+  const declaredType = file.type?.toLowerCase().split(';')[0].trim();
+  if (allowedTypes.has(declaredType)) return declaredType;
+
+  const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+  return extensionTypeMap.get(extension) ?? '';
+};
+
 const getPublicUrl = (name) =>
   `${supabaseUrl}/storage/v1/object/public/${bucket}/${encodeURIComponent(name)}`;
 
@@ -119,11 +131,11 @@ export const listAlbumItems = async (limit = 200) => {
     .filter(Boolean)
     .sort((first, second) => {
       const createdAtOrder = Date.parse(first.createdAt) - Date.parse(second.createdAt);
-      if (Number.isFinite(createdAtOrder) && createdAtOrder !== 0) return createdAtOrder;
+      if (Number.isFinite(createdAtOrder) && createdAtOrder !== 0) return createdAtOrder * -1;
 
       const firstUploadTime = Number(first.name.match(/^(\d+)-/)?.[1] ?? 0);
       const secondUploadTime = Number(second.name.match(/^(\d+)-/)?.[1] ?? 0);
-      return firstUploadTime - secondUploadTime || first.name.localeCompare(second.name);
+      return secondUploadTime - firstUploadTime || second.name.localeCompare(first.name);
     });
 };
 
@@ -132,7 +144,8 @@ export const uploadAlbumFile = (file, author, onProgress) => {
     return Promise.reject(new Error('O álbum compartilhado ainda não está configurado.'));
   }
 
-  const extension = allowedTypes.get(file.type);
+  const resolvedType = resolveFileType(file);
+  const extension = allowedTypes.get(resolvedType);
   if (!extension) return Promise.reject(new Error('Este formato de arquivo não é aceito.'));
   if (!file.size) return Promise.reject(new Error('O arquivo está vazio.'));
   if (file.size > MAX_FILE_SIZE) return Promise.reject(new Error('O arquivo ultrapassa o limite de 100 MB.'));
@@ -146,7 +159,9 @@ export const uploadAlbumFile = (file, author, onProgress) => {
     request.open('POST', endpoint);
     request.setRequestHeader('apikey', supabaseKey);
     request.setRequestHeader('Authorization', 'Bearer ' + supabaseKey);
-    request.setRequestHeader('Content-Type', file.type);
+    request.setRequestHeader('Content-Type', resolvedType);
+    request.timeout = 10 * 60 * 1000;
+    request.addEventListener('timeout', () => reject(new Error('O envio demorou demais. Verifique sua conexão e tente novamente.')));
     request.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
     });
@@ -166,7 +181,7 @@ export const uploadAlbumFile = (file, author, onProgress) => {
       resolve({
         name,
         author: authorSlug ? formatAuthor(authorSlug) : '',
-        type: file.type.startsWith('video/') ? 'video' : 'photo',
+        type: resolvedType.startsWith('video/') ? 'video' : 'photo',
         url: getPublicUrl(name),
         createdAt: new Date().toISOString()
       });

@@ -12,6 +12,26 @@ const acceptedTypes = new Set([
   'video/webm'
 ]);
 
+const extensionTypes = new Map([
+  ['jpg', 'image/jpeg'],
+  ['jpeg', 'image/jpeg'],
+  ['png', 'image/png'],
+  ['webp', 'image/webp'],
+  ['gif', 'image/gif'],
+  ['heic', 'image/heic'],
+  ['heif', 'image/heif'],
+  ['mp4', 'video/mp4'],
+  ['mov', 'video/quicktime'],
+  ['webm', 'video/webm']
+]);
+
+const resolveSelectedType = (file) => {
+  const declaredType = file.type?.toLowerCase().split(';')[0].trim();
+  if (acceptedTypes.has(declaredType)) return declaredType;
+  const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+  return extensionTypes.get(extension) ?? '';
+};
+
 const formatSize = (bytes) => {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -70,7 +90,8 @@ const mountUpload = () => {
       const row = document.createElement('div');
       row.className = 'upload-file';
 
-      if (item.previewUrl && item.file.type.startsWith('image/')) {
+      const selectedType = resolveSelectedType(item.file);
+      if (item.previewUrl && selectedType.startsWith('image/')) {
         const preview = document.createElement('img');
         preview.className = 'upload-file__preview';
         preview.src = item.previewUrl;
@@ -138,7 +159,7 @@ const mountUpload = () => {
         invalid.push(`${file.name}: limite de ${MAX_FILES} arquivos por envio`);
         return;
       }
-      if (!acceptedTypes.has(file.type)) {
+      if (!resolveSelectedType(file)) {
         invalid.push(`${file.name}: formato não aceito`);
         return;
       }

@@ -6,6 +6,14 @@ const readProjectFile = (fileName) =>
   readFile(new URL(`../${fileName}`, import.meta.url), 'utf8');
 
 describe('guest photo upload', () => {
+  it('recognizes mobile HEIC and MOV files even when the browser omits their MIME type', async () => {
+    const script = await readProjectFile('src/js/album.js');
+    const uploader = await readProjectFile('src/js/upload.js');
+
+    expect(script).toContain("extensionTypeMap.get(extension)");
+    expect(uploader).toContain("['heic', 'image/heic']");
+    expect(uploader).toContain("['mov', 'video/quicktime']");
+  });
   it('uses the honoree name Inaude Jr. consistently across public and private pages', async () => {
     const pages = await Promise.all(
       ['index.html', 'upload.html', 'galeria.html', 'admin.html'].map(readProjectFile)
