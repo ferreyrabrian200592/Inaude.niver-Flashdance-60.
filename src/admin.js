@@ -2,8 +2,8 @@ import './styles/variables.css';
 import './styles/base.css';
 import './styles/admin.css';
 
-const projectUrl = 'https://otqhrpbxhxkrhrnjqbba.supabase.co';
-const publicKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const projectUrl = 'https://kgqztbsasotuhkhlgwqu.supabase.co';
+const publicKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() || 'sb_publishable_jHTwD4aqTJOCm2PbY4FITw_0oWNENt8';
 const bucket = 'inaude-album';
 const sessionKey = 'inaude-admin-session';
 const loginForm = document.querySelector('[data-admin-login]');

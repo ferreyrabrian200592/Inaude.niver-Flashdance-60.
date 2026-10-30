@@ -11,7 +11,7 @@ describe('guest photo upload', () => {
     const uploader = await readProjectFile('src/js/upload.js');
 
     expect(script).toContain("extensionTypeMap.get(extension)");
-    expect(script).toContain("https://otqhrpbxhxkrhrnjqbba.supabase.co");
+    expect(script).toContain("https://kgqztbsasotuhkhlgwqu.supabase.co");
     expect(uploader).toContain("['heic', 'image/heic']");
     expect(uploader).toContain("['mov', 'video/quicktime']");
   });

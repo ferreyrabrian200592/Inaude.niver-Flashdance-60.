@@ -11,9 +11,10 @@ const allowedTypes = new Map([
   ['video/webm', 'webm']
 ]);
 
-const defaultSupabaseUrl = 'https://otqhrpbxhxkrhrnjqbba.supabase.co';
+const defaultSupabaseUrl = 'https://kgqztbsasotuhkhlgwqu.supabase.co';
 const supabaseUrl = defaultSupabaseUrl;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+const defaultSupabaseKey = 'sb_publishable_jHTwD4aqTJOCm2PbY4FITw_0oWNENt8';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() || defaultSupabaseKey;
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024;
 export const MAX_FILES = 10;
