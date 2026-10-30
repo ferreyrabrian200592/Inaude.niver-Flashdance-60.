@@ -11,7 +11,8 @@ const allowedTypes = new Map([
   ['video/webm', 'webm']
 ]);
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/+$/, '');
+const defaultSupabaseUrl = 'https://otqhrpbxhxkrhrnjqbba.supabase.co';
+const supabaseUrl = defaultSupabaseUrl;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024;
